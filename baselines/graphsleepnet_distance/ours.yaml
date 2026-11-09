@@ -1,0 +1,14 @@
+configuration: ours
+description: >-
+  GraphSleepNet with a fixed scalp-distance graph under our configuration: as
+  graphsleepnet/ours.yaml, with the learned graph replaced by the benchmark's distance kernel
+  (Gaussian, sigma 0.35 head radii, rows normalised, self-loops kept) applied to our 3-D
+  montage positions scaled to a mean radius of one, because upstream's 2-D coordinate table
+  knows few of our 83 electrodes.
+seed: 0
+window: 5
+sigma: 0.35
+de_fit_batches: 2
+overrides:
+  finetune:
+    freeze_epochs: 0

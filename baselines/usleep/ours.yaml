@@ -1,0 +1,20 @@
+protocol: ours
+description: >-
+  U-Sleep trained from scratch on our protocol (83 EEG at 1 kHz, CAR, train-fitted robust
+  scaler, runs of 20 epochs, one test item per scored epoch ending at it). The released
+  architecture is unchanged except the forced input changes: first convolution 83 -> 6
+  instead of 2 -> 6, and the segment classifier pools 30,000 samples (30 s at 1 kHz)
+  instead of 3,840. Kernel 9 samples and depth 12 as released; the receptive field in
+  seconds is therefore 7.8x shorter than native (change kernel_size or depth here for
+  the sensitivity runs).
+seed: 42
+architecture:
+  n_channels: 83
+  depth: 12
+  kernel_size: 9
+  complexity: 1.2923
+  scale: 1.4142
+  pool_samples: 30000
+overrides:
+  finetune:
+    freeze_epochs: 0

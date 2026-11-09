@@ -1,0 +1,13 @@
+reference_run: runs/exp15_final_fold0
+fold: baselines/folds/fold0.json
+results_dir: baselines/results
+cache_dir: baselines/cache
+quick:
+  train_subjects: 2
+  val_subjects: 1
+  test_subjects: 1
+  val_items: 48
+  test_items: 48
+  epochs: 1
+  native_steps: 4
+  native_nights: 3

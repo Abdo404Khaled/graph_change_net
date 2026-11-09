@@ -1,0 +1,134 @@
+experiment: default
+description: ""
+seed: 42
+
+paths:
+  data_root: data/anphy/ANPHY-Sleep/osfstorage
+  cache_dir: cache_v0
+  runs_dir: runs
+
+data:
+  sfreq: 1000.0
+  window_s: 1.0
+  n_segments: 5
+  highpass: 0.5
+  lowpass: 45.0
+  notch: 60.0
+  filter: bandpass
+  notch_harmonics: 1
+  channel_subset: []
+  block_s: 60.0
+  pad_s: 10.0
+  blocks_per_subject: 12
+  align_blocks: false
+  max_subjects: 0
+  stages: [W, N1, N2, N3, R]
+  rolling: false
+  train_stride_s: 5
+  val_stride_s: 5
+  test_stride_s: 1
+  pretrain_unlabeled: false
+  scored_epochs: false
+  artifact_uv: 500.0
+  scaler_stride: 100
+  context_epochs: 1
+
+split:
+  n_val_subjects: 3
+  n_test_subjects: 5
+  n_folds: 0
+  fold: 0
+  fold_seed: false
+  n_test_groups: 0
+  test_group: 0
+
+model:
+  d_model: 32
+  d_graph: 16
+  graph_learner:
+    name: residual_change
+    memory: true
+  graph_conv:
+    name: signed
+    dropout: 0.2
+  position:
+    name: none
+  sequence:
+    name: gru
+    hidden: 128
+    layers: 2
+    dropout: 0.25
+  decoder:
+    name: gru_continuous
+    sample_position: false
+  head:
+    name: mlp
+    hidden: 128
+    dropout: 0.35
+  readout:
+    name: last
+  context:
+    name: none
+
+loader:
+  batch_size: 128
+  num_workers: 0
+
+augment:
+  time_roll: 100
+  scale: 0.15
+  channel_drop: 0.15
+
+pretrain:
+  epochs: 300
+  lr: 1.0e-3
+  weight_decay: 1.0e-3
+  mask_ratio: 0.3
+  channel_mask_prob: 0.3
+  mask_mode: random
+  cluster_size: 0
+  patience: 40
+  val_every: 2
+  delta_penalty: 1.0e-3
+  graph_penalty: 0.0
+  spectral_loss: false
+  stft_sizes: [256, 512, 1024]
+  future_steps: 0
+  future_temperature: 0.1
+  uncertainty_weighting: false
+  reconstruction_weight: 1.0
+  spectral_weight: 1.0
+  future_weight: 1.0
+  relative_losses: false
+  spectral_floor: 0.0
+  max_skip_share: 1.0
+  init_run: ""
+
+finetune:
+  batch_size: 0
+  epochs: 300
+  lr: 1.0e-3
+  weight_decay: 1.0e-3
+  warmup_epochs: 5
+  patience: 60
+  ema_decay: 0.999
+  freeze_epochs: 15
+  backbone_lr_scale: 0.1
+  label_smoothing: 0.05
+  balanced_sampling: false
+  class_balanced_loss: true
+  class_balance_beta: 0.999
+  class_weight_min: 0.5
+  class_weight_max: 3.0
+  focal_gamma: 1.5
+  delta_penalty: 1.0e-3
+  graph_penalty: 0.0
+
+evaluation:
+  shuffle_trials: 10
+  reconstruction_batches: 20
+  top_k: 3
+  plot_segments: 0
+  plots: true
+  curve_batches: 0
+  nearest_candidates: 4

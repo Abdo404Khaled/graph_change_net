@@ -1,0 +1,13 @@
+base: no_electrode_graph.yaml
+description: >-
+  Exp 15 with no graph at either level: no electrode graph (as no_electrode_graph) and no
+  segment graph (no_segment_graph's lag_transformer). Two changes at once on purpose: the
+  lower bound of the graph hierarchy.
+model:
+  sequence:
+    name: lag_transformer
+    hidden: 128
+    layers: 4
+    heads: 4
+    ff_mult: 4
+    dropout: 0.1

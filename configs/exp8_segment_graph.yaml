@@ -1,0 +1,28 @@
+base: exp7_signed_attention.yaml
+description: >-
+  Exp 7 on 5 s windows of 50 x 100 ms segments, with layer 2: the GRU over segments is
+  replaced by a graph over the 50 segments whose edge signs (positive / negative,
+  every earlier -> later pair) are learned per window by a link predictor with Gumbel-softmax
+  sampling (NRI KL penalty 0.1), propagated by two signed graph attention layers.
+data:
+  window_s: 5.0
+  n_segments: 50
+  align_blocks: true
+loader:
+  batch_size: 16
+model:
+  sequence:
+    name: segment_graph
+    hidden: 128
+    edge_hidden: 64
+    temperature: 0.5
+    heads: 4
+    attention_dim: 8
+    negative_slope: 0.2
+    dropout: 0.25
+evaluation:
+  plot_segments: 5
+pretrain:
+  graph_penalty: 0.1
+finetune:
+  graph_penalty: 0.1

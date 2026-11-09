@@ -1,0 +1,5 @@
+base: [exp5_signed_gcn.yaml, final_protocol.yaml]
+description: >-
+  Exp 5 under the final protocol: the electrode graph L^S + Delta_t of every 1 s segment,
+  two signed graph convolutions, a GRU over the 30 segments, the last segment classifies.
+  The core GraphChangeNet without a segment graph.

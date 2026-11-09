@@ -1,0 +1,13 @@
+base: exp15_final.yaml
+description: >-
+  Exp 15 without the epoch context: every epoch is classified from itself alone, with the
+  same stage 1, so the difference from Exp 15 is the GRU over the epoch and the 19 before it.
+  It also gets the segment-graph controls (random, average and no graph), which need single
+  epochs.
+data:
+  context_epochs: 1
+model:
+  context:
+    name: none
+finetune:
+  batch_size: 32

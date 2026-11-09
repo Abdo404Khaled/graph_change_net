@@ -1,0 +1,47 @@
+configuration: ours
+description: >-
+  Hypno-PC under our configuration: the authors' 20 EEG features per electrode (83
+  electrodes, Welch 4 s Hamming, 0.5-40 Hz) from exactly the scaled 1 kHz epochs our model
+  reads (notch, 0.5-45 Hz, common average, training robust scaler, clip +-20); no EOG, EMG
+  or ECG; z-score fitted on the training nights' clean scored epochs, clip +-5; PCA (90 %)
+  on the same epochs; LinearSVC on the principal components of the epoch and the 19
+  before it, trained on clean scored training epochs and tested on every scored test epoch.
+block_epochs: 32
+welch:
+  n_fft: 4000
+  band: [0.5, 40.0]
+bands:
+  low_delta: [0.5, 1.5]
+  high_delta: [1.0, 4.0]
+  theta: [4.0, 8.0]
+  alpha: [8.0, 12.0]
+  low_sigma: [10.0, 13.0]
+  high_sigma: [12.0, 16.0]
+  beta: [15.0, 25.0]
+  gamma: [25.0, 40.0]
+normalisation:
+  clip: 5.0
+pca:
+  variance: 0.90
+  random_state: 42
+classifier:
+  C: 1.0
+  penalty: l2
+  loss: squared_hinge
+  dual: auto
+  tol: 1.0e-4
+  max_iter: 1000
+  class_weight: balanced
+  random_state: 0
+primary_row: context
+rows:
+  context:
+    components: all
+    standardise_components: false
+    context_epochs: 20
+  single_epoch:
+    components: all
+    standardise_components: false
+    context_epochs: 1
+jobs: 6
+quick_epochs: 120

@@ -1,0 +1,13 @@
+base: exp11_lag_graph_transformer.yaml
+description: >-
+  Control for Exp 11: the same causal Transformer with the learned lag bias, without the
+  segment graph and its signed branch. If Exp 11 does not beat it, the segment graph adds
+  nothing.
+model:
+  sequence:
+    name: lag_transformer
+    hidden: 128
+    layers: 4
+    heads: 4
+    ff_mult: 4
+    dropout: 0.1

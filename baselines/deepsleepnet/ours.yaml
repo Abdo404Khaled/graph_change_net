@@ -1,0 +1,38 @@
+configuration: ours
+description: >-
+  DeepSleepNet in our configuration on fold 0: 83 EEG at 1 kHz (notch, 0.5-45 Hz, common
+  average, robust scaling clipped at +-20), runs of 20 epochs, our stage-2 trainer from
+  scratch. The architecture is upstream's with only the forced input changes: first kernels
+  and strides scaled to 1 kHz (Fs/2 = 500 and Fs/16 = 62, 4 Fs = 4000 and Fs/2 = 500) and 83
+  input channels in both first convolutions. The bidirectional LSTM is kept; each test item's
+  labelled epoch is the last of its run, so no later epoch reaches it.
+seed: 0
+signal:
+  sampling_rate: 1000.0
+  in_channels: 83
+model:
+  first_filters: 64
+  deep_filters: 128
+  small:
+    first_kernel_s: 0.5
+    first_stride_s: 0.0625
+    first_pool: 8
+    deep_kernel: 8
+    last_pool: 4
+  large:
+    first_kernel_s: 4.0
+    first_stride_s: 0.5
+    first_pool: 4
+    deep_kernel: 6
+    last_pool: 2
+  dropout: 0.5
+  batch_norm:
+    epsilon: 1.0e-5
+    momentum: 0.001
+    gamma_std: 0.002
+  hidden_size: 512
+  n_layers: 2
+  forget_bias: 1.0
+overrides:
+  finetune:
+    freeze_epochs: 0

@@ -1,0 +1,7 @@
+base: exp5_signed_gcn.yaml
+description: >-
+  Exp 5 plus a sinusoidal encoding of the segment index added to every node
+  representation after the graph convolutions.
+model:
+  position:
+    name: segment

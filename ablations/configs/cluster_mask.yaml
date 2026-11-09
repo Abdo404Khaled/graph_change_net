@@ -1,0 +1,11 @@
+base: ../../configs/exp15_final.yaml
+description: >-
+  Exp 15 with clustered masking in stage 1: when whole electrodes are hidden, each hidden
+  electrode takes its 4 nearest neighbours with it (about the same share of electrodes is
+  hidden), so a hidden region cannot be filled in by copying volume-conducted signal from its
+  neighbours and the electrode graph has to carry non-local relationships. The random-cell
+  masks are unchanged. On fold 0 the learned graph already degrades least when a neighbourhood
+  is hidden (variance explained 0.518 against 0.466 for the fixed distance graph).
+pretrain:
+  mask_mode: cluster
+  cluster_size: 4

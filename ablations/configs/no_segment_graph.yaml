@@ -1,0 +1,14 @@
+base: ../../configs/exp15_final.yaml
+description: >-
+  Exp 15 without the segment graph: the sequence component is Exp 11a's lag_transformer, the
+  same causal Transformer blocks with the learned lag bias but without the segment graph and
+  its signed branch. The electrode graph L^S + Delta_t is unchanged. Measures what the
+  segment level of the graph hierarchy adds to the final model.
+model:
+  sequence:
+    name: lag_transformer
+    hidden: 128
+    layers: 4
+    heads: 4
+    ff_mult: 4
+    dropout: 0.1

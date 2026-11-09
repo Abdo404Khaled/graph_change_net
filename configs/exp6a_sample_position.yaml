@@ -1,0 +1,7 @@
+base: exp5_signed_gcn.yaml
+description: >-
+  Exp 5 plus a sinusoidal encoding of each sample's position inside its segment,
+  added to the decoder input only (stage 1). Superseded by Exp 6.
+model:
+  decoder:
+    sample_position: true

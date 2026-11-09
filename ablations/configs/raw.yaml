@@ -1,0 +1,7 @@
+base: ../../configs/exp15_final.yaml
+description: >-
+  Exp 15 trained on unfiltered EEG: no notch and no band-pass, only the common average. Exp 15
+  itself drops to kappa 0.31 on such input, so this tests whether a model can learn to stage
+  from the recording as it is, or whether drift and line-noise removal are required.
+data:
+  filter: none

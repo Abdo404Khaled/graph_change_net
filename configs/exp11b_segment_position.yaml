@@ -1,0 +1,8 @@
+base: exp11_lag_graph_transformer.yaml
+description: >-
+  Control for Exp 11: the absolute segment position of Exp 6-10 added back after layer 1.
+  Tests whether absolute position is what made Exp 10's segment graph the same in every
+  window.
+model:
+  position:
+    name: segment

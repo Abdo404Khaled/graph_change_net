@@ -1,0 +1,153 @@
+order: [prepare, final, development, removals, rotation, ablations, baselines, baselines_rotation, analysis]
+
+groups:
+  prepare:
+    description: download ANPHY-Sleep, fetch the baselines' upstream code and weights, build the preprocessed caches
+    steps:
+      - command: python scripts/download_anphy.py
+        done: data/anphy/ANPHY-Sleep/osfstorage
+      - command: bash scripts/baselines_setup.sh
+      - command: python run.py --only exp15_final --prepare-data
+      - command: python run.py --config ablations/configs/{name}.yaml --set split.fold=0 --prepare-data
+        for: {name: [wideband, raw, electrodes_19]}
+
+  final:
+    description: GraphChangeNet (Exp 15) on five folds; training and validation nights rotate around the same five test nights
+    steps:
+      - command: python run.py --only exp15_final --set split.fold={fold}
+        for: {fold: [0, 1, 2, 3, 4]}
+        done: runs/exp15_final_fold{fold}/metrics.json
+
+  development:
+    description: the runs that built the final model (ablation table, part a), five folds each; exp14b starts from exp14a's stage 1
+    steps:
+      - command: python run.py --only {experiment} --set split.fold={fold}
+        for:
+          experiment: [final5_signed_gcn, final11_lag_graph_transformer, final12_window_graph,
+                       exp14a_scored_epochs, exp14b_epoch_context]
+          fold: [0, 1, 2, 3, 4]
+        done: runs/{experiment}_fold{fold}/metrics.json
+
+  removals:
+    description: one part removed from the final model (ablation table, part b), five folds each
+    steps:
+      - command: python run.py --only {experiment} --set split.fold={fold}
+        for:
+          experiment: [exp15a_no_stage1, exp15b_no_context, exp15c_reconstruction_only]
+          fold: [0, 1, 2, 3, 4]
+        done: runs/{experiment}_fold{fold}/metrics.json
+
+  rotation:
+    description: GraphChangeNet on the rotation; 7 groups of 4 nights, every night tested once
+    steps:
+      - command: python run.py --only exp15_rotation --set split.test_group={group}
+        for: {group: [0, 1, 2, 3, 4, 5, 6]}
+        done: runs/exp15_rotation_rot{group}/metrics.json
+
+  ablations:
+    description: mechanism ablations of the graph hierarchy (ablation table, part c) and input settings
+    steps:
+      - command: python -m ablations.run {name} --fold 0
+        for:
+          name: [no_electrode_graph, epoch_graph, stable_only, no_memory, distance_graph, unsigned_graph,
+                 no_segment_graph, no_graph, no_electrode_graph_no_stage1, raw, electrodes_19]
+        done: ablations/results/{name}_fold0/metrics.json
+      - command: python -m ablations.run {name} --fold {fold}
+        for:
+          name: [cluster_mask, wideband, wideband_cluster]
+          fold: [0, 1, 2, 3, 4]
+        done: ablations/results/{name}_fold{fold}/metrics.json
+
+  baselines:
+    description: published models on the single split; native (N), unified input (U), causal (C) and shared CNN frontend (CNN-2S); needs runs/exp15_final_fold0
+    steps:
+      - command: python -m baselines.sleepgraph.native
+      - command: python -m baselines.run {model} {config}
+        for:
+          model: [anysleep, usleep, deepsleepnet, cbramod, hypnopc, graphsleepnet, graphsleepnet_distance,
+                  mstgcn, productgraphsleepnet]
+          config: [native, ours]
+        done: baselines/results/{model}/{config}/metrics.json
+      - command: python -m baselines.run {model} causal
+        for: {model: [anysleep, graphsleepnet, mstgcn, productgraphsleepnet]}
+        done: baselines/results/{model}/causal/metrics.json
+      - command: python -m baselines.run {model} cnn2s
+        for: {model: [graphsleepnet, productgraphsleepnet]}
+        done: baselines/results/{model}/cnn2s/metrics.json
+
+  baselines_rotation:
+    description: published models on the rotation, the same 7 groups as GraphChangeNet
+    steps:
+      - command: python scripts/write_rotation_folds.py exp15_rotation baselines/folds
+        done: baselines/folds/rot6.json
+      - command: python -m baselines.run {model} native --fold baselines/folds/rot{group}.json
+        for:
+          model: [anysleep, usleep, hypnopc, graphsleepnet, graphsleepnet_distance, mstgcn, productgraphsleepnet]
+          group: [0, 1, 2, 3, 4, 5, 6]
+        done: baselines/results/{model}/native_rot{group}/metrics.json
+      - command: python -m baselines.run {model} causal --fold baselines/folds/rot{group}.json
+        for:
+          model: [anysleep, graphsleepnet, mstgcn, productgraphsleepnet]
+          group: [0, 1, 2, 3, 4, 5, 6]
+        done: baselines/results/{model}/causal_rot{group}/metrics.json
+      - command: python -m baselines.run {model} cnn2s --fold baselines/folds/rot{group}.json
+        for:
+          model: [graphsleepnet, productgraphsleepnet]
+          group: [0, 1, 2, 3, 4, 5, 6]
+        done: baselines/results/{model}/cnn2s_rot{group}/metrics.json
+
+  analysis:
+    description: predictions, statistics, graph analyses, cost and the paper's tables and figures, from the finished runs; no training
+    steps:
+      - command: python -m ablations.export_graphs {run}
+        for:
+          run: [runs/exp15_final_fold0, runs/exp15_final_fold1, runs/exp15_final_fold2, runs/exp15_final_fold3,
+                runs/exp15_final_fold4, ablations/results/stable_only_fold0, ablations/results/distance_graph_fold0]
+        done: "{run}/graphs.npz"
+      - command: python analysis/e2_all.py analysis/results
+        done: analysis/results/e2_all.json
+      - command: python analysis/pred_rest.py analysis/results
+        done: analysis/results/pred_rest.json
+      - command: python analysis/t1_predictions.py analysis/results/predictions
+        done: analysis/results/predictions/unsigned_graph.npz
+      - command: python analysis/stats.py analysis/results analysis/results
+        done: analysis/results/stats.json
+      - command: python analysis/rotation_outputs.py analysis/results/rotation_predictions
+        done: analysis/results/rotation_predictions/rot6.npz
+      - command: python analysis/rotation_stats.py analysis/results/rotation_predictions analysis/results/rotation_stats.json
+        done: analysis/results/rotation_stats.json
+      - command: >-
+          python analysis/stage1_stats.py analysis/results/stage1_stats.json 2000 stable_only no_memory epoch_graph
+          distance_graph no_segment_graph no_electrode_graph no_graph cluster_mask "15b no context" "15c reconstruction only"
+        done: analysis/results/stage1_stats.json
+      - command: python analysis/stage1_stats.py analysis/results/stage1_stats_t1.json 2000 unsigned_graph
+        done: analysis/results/stage1_stats_t1.json
+      - command: python analysis/segment_stage.py analysis/results/scaler_fold0.npz analysis/results/segment_graphs.npz
+        done: analysis/results/segment_graphs.npz
+      - command: python analysis/stage_graphs.py analysis/results/stage_graphs
+        done: analysis/results/stage_graphs/stage_summary.json
+      - command: python analysis/stage_figure.py analysis/results/figures
+        done: analysis/results/stage_specificity.json
+      - command: python analysis/a19_axis_shift.py analysis/results/a19_axis_shift.json
+        done: analysis/results/a19_axis_shift.json
+      - command: python analysis/a4_events.py analysis/results/a4_events.json 1000
+        done: analysis/results/a4_events.json
+      - command: python analysis/stable_graph_structure.py analysis/results/stable_graph_distance.json
+        done: analysis/results/stable_graph_distance.json
+      - command: python analysis/graph_views.py analysis/results/views
+        done: analysis/results/views/graph_views.json
+      - command: python analysis/cost.py {mode} analysis/results/cost_{mode}.json
+        for: {mode: [static, timing]}
+        done: analysis/results/cost_{mode}.json
+      - command: python analysis/cost_baselines.py static analysis/results/cost_baselines.json
+        done: analysis/results/cost_baselines.json
+      - command: python analysis/cost_baselines.py timing analysis/results/cost_baselines_timing.json
+        done: analysis/results/cost_baselines_timing.json
+      - command: python analysis/input_variants.py analysis/results/variants
+        done: analysis/results/variants/input_variants.json
+      - command: python analysis/build_variants_2.py analysis/results/variants
+      - command: python analysis/baseline_variants.py analysis/results/variants analysis/results/baseline_variants
+        done: analysis/results/baseline_variants/baseline_variants.json
+      - command: python analysis/baseline_variants_2.py analysis/results/variants analysis/results/baseline_variants
+        done: analysis/results/baseline_variants/baseline_variants_2.json
+      - command: python analysis/paper_assets.py analysis/results/paper

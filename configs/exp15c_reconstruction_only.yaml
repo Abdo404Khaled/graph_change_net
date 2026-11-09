@@ -1,0 +1,9 @@
+base: exp15_final.yaml
+description: >-
+  Exp 15 with a single stage-1 task: masked reconstruction alone, still relative to predicting
+  zeros and decoded by the MLP; the spectral and "predict the next second" losses are off.
+  Everything else (backbone, context, stage 2) is Exp 15's, so the difference from Exp 15 is
+  what the two extra tasks add to the encoder.
+pretrain:
+  spectral_loss: false
+  future_steps: 0

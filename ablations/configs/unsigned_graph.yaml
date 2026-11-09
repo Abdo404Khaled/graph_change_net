@@ -1,0 +1,11 @@
+base: ../../configs/exp15_final.yaml
+description: >-
+  Exp 15 trained without edge signs in the electrode-graph convolution (graph_conv unsigned):
+  the graph learner still builds the signed A_t = L^S + Delta_t, but the convolution sees only
+  |A_t|, every edge as positive, and nothing reaches a node through the negative path. Same
+  layers and parameter count as Exp 15. The segment graph is unchanged. Answers whether a model
+  trained without signs is worse, which the test-time sign edits on the trained model cannot.
+model:
+  graph_conv:
+    name: unsigned
+    dropout: 0.2

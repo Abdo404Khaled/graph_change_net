@@ -1,0 +1,4 @@
+base: [exp12_window_graph.yaml, final_protocol.yaml]
+description: >-
+  Exp 12 under the final protocol: the segment graph is computed from the epoch alone (no
+  learned stable part), with the blocks of Exp 11 and the residual MLP head.

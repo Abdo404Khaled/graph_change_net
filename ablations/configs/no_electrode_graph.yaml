@@ -1,0 +1,8 @@
+base: ../../configs/exp15_final.yaml
+description: >-
+  Exp 15 without the electrode graph (graph learner no_graph): every edge is zero, so the
+  signed convolution keeps only each electrode's own-state path. The segment graph is
+  unchanged. Measures what the electrode level of the graph hierarchy adds.
+model:
+  graph_learner:
+    name: no_graph

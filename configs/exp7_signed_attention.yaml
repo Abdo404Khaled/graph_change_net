@@ -1,0 +1,12 @@
+base: exp6_segment_position.yaml
+description: >-
+  Exp 6 with the signed graph convolution replaced by signed graph attention: each
+  electrode re-weights its positive and its negative neighbours by attention on top of
+  |L^S + Delta| (balance-theory SGAT, as in SNEA; starts out equal to the SGCN).
+model:
+  graph_conv:
+    name: signed_attention
+    dropout: 0.2
+    heads: 4
+    attention_dim: 8
+    negative_slope: 0.2

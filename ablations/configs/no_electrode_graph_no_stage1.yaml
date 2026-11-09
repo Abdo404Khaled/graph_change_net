@@ -1,0 +1,10 @@
+base: no_electrode_graph.yaml
+description: >-
+  no_electrode_graph without stage 1, to be compared with Exp 15a (Exp 15 without stage 1).
+  Without an electrode graph the stage-1 reconstruction cannot work, so no_electrode_graph
+  mixes the absence of the graph with a failed pretraining; with no stage 1 on either side the
+  difference is the electrode graph alone. As in Exp 15a, no frozen probe.
+pretrain:
+  epochs: 0
+finetune:
+  freeze_epochs: 0

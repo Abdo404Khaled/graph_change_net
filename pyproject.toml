@@ -1,0 +1,32 @@
+[project]
+name = "graphchangenet-eeg"
+version = "0.2.0"
+description = "Stable electrode graph + per-segment change for sleep staging on ANPHY-Sleep HD-EEG"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.2",
+    "numpy>=1.24",
+    "mne>=1.6",
+    "scikit-learn>=1.3",
+    "matplotlib>=3.7",
+    "networkx>=3.0",
+    "plotly>=5.0",
+    "tqdm>=4.60",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+notebooks = ["jupyter", "ipykernel"]
+dev = ["ruff>=0.5"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["B905"]
+
+[tool.ruff.lint.per-file-ignores]
+"analysis/*.py" = ["E402", "E501"]

@@ -1,0 +1,27 @@
+protocol: native_zero_shot
+description: >-
+  Zero-shot U-Sleep in its native configuration with the AnySleep authors' PyTorch
+  retrain (usleep-run1/2/3.pth; unofficial, the official weights are not released).
+  One EEG and one EOG per input, 128 Hz (polyphase), clip +-20 IQR, RobustScaler per
+  night and channel, no filter, the whole night per pair; 79 EEG (SO1, SO2, ZY1, ZY2
+  excluded as in AnySleep's ANPHY script) x EOG1/EOG2 = 158 pairs, combined by the
+  official sum of softmax; AnySleep's hard majority vote is kept as a secondary row.
+checkpoints:
+  - baselines/anysleep/upstream/models/usleep-run1.pth
+  - baselines/anysleep/upstream/models/usleep-run2.pth
+  - baselines/anysleep/upstream/models/usleep-run3.pth
+architecture:
+  depth: 12
+  complexity: 1.2923
+  scale: 1.4142
+  sleep_stage_frequency: 1
+sampling_rate: 128
+epoch_seconds: 30
+clip_iqr: 20
+eog_channels: [EOG1, EOG2]
+excluded_eeg: [SO1, SO2, ZY1, ZY2]
+batch_pairs: 8
+tie_seed: 42
+quick:
+  pairs: 4
+  checkpoints: 1

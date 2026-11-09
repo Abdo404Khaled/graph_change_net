@@ -1,0 +1,27 @@
+protocol: ours
+description: >-
+  CBraMod's architecture on our configuration: 83 EEG at 1 kHz (never resampled), our
+  preprocessing, scaler, runs of 20 epochs and our stage-2 trainer (4-epoch frozen probe,
+  then everything). 1 s patches of 1000 points (30 per epoch) through the pretrained patch
+  encoder with its first convolution stretched x5 and the first 101 FFT bins; pretrained
+  criss-cross transformer; upstream's ISRUC head unchanged (flatten Linear(498000, 512),
+  bidirectional one-layer transformer over the run, Linear(512, 5)). Electrodes are put in a
+  fixed nearest-neighbour chain order before the backbone.
+weights: baselines/cbramod/weights/pretrained_weights.pth
+overrides: {}
+model:
+  backbone:
+    in_dim: 200
+    out_dim: 200
+    d_model: 200
+    dim_feedforward: 800
+    seq_len: 30
+    n_layer: 12
+    nhead: 8
+    dropout: 0.1
+  patch_samples: 1000
+  channel_order: nearest_neighbour_chain
+  head_hidden: 512
+  sequence_heads: 4
+  sequence_feedforward: 2048
+  sequence_layers: 1

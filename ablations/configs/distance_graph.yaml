@@ -1,0 +1,10 @@
+base: ../../configs/exp15_final.yaml
+description: >-
+  Exp 15 with a fixed scalp-distance graph instead of L^S + Delta_t (graph learner
+  distance_kernel): the thresholded Gaussian kernel of Tang et al. (ICLR 2022) on the montage
+  coordinates scaled to a mean radius of one, the same graph for every segment, nothing
+  learned. The segment graph is unchanged. Learned against fixed electrode graph.
+model:
+  graph_learner:
+    name: distance_kernel
+    threshold: 0.9

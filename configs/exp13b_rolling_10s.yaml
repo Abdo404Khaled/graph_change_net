@@ -1,0 +1,9 @@
+base: exp13a_rolling_5s.yaml
+description: >-
+  Exp 13a with 10 s windows: 100 segments of 100 ms, batch 8 (the continuous decoder's GRU
+  fails above about 2^30 batch x electrodes x samples x gate units).
+data:
+  window_s: 10.0
+  n_segments: 100
+loader:
+  batch_size: 8

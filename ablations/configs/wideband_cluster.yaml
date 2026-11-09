@@ -1,0 +1,6 @@
+base: [wideband.yaml, cluster_mask.yaml]
+description: >-
+  The two candidate improvements together: the full recorded band (wideband: 0.5 Hz high-pass,
+  notches at 60-420 Hz, no low-pass) and clustered masking in stage 1 (cluster_mask: each
+  hidden electrode takes its 4 nearest neighbours with it). Two changes at once on purpose;
+  wideband and cluster_mask alone separate them.

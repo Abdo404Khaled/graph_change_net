@@ -1,0 +1,18 @@
+base: exp8_segment_graph.yaml
+description: >-
+  Exp 8 with continuous signed edges: each pair of a segment and an earlier one gets a
+  weight w = tanh(MLP) in [-1, 1] (FAGCN-style) instead of a Gumbel-sampled sign, which
+  collapsed to one sign in every fold. No sampling, so no KL penalty.
+model:
+  sequence:
+    name: continuous_segment_graph
+    hidden: 128
+    edge_hidden: 64
+    heads: 4
+    attention_dim: 8
+    negative_slope: 0.2
+    dropout: 0.25
+pretrain:
+  graph_penalty: 0.0
+finetune:
+  graph_penalty: 0.0

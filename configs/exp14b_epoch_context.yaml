@@ -1,0 +1,19 @@
+base: exp14a_scored_epochs.yaml
+description: >-
+  Exp 14a with epoch context: each epoch is classified from itself and the 19 epochs
+  before it (10 min), read in order by a one-direction GRU over the epochs' pooled vectors,
+  so the classifier can use what the scorer uses (an unclear epoch after REM, N1 after
+  wake). Starts from Exp 14a's stage-1 weights of the same fold, so the only difference
+  from 14a is the context. 2 runs of 20 epochs per step (40 labelled epochs).
+data:
+  context_epochs: 20
+model:
+  context:
+    name: gru
+    hidden: 128
+    layers: 2
+    dropout: 0.25
+pretrain:
+  init_run: exp14a_scored_epochs
+finetune:
+  batch_size: 2

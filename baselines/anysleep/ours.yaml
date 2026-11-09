@@ -1,0 +1,22 @@
+name: ours
+mode: ours
+description: >-
+  The AnySleep architecture as released (depth 12, kernel 9, released filter
+  counts, 13 channel-attention modules), trained from scratch under our
+  configuration: 83 EEG at 1 kHz, notch, 0.5-45 Hz band-pass, common average,
+  robust scaler fitted on the training nights and clipped to +-20, runs of 20
+  epochs laid end to end as one recording, one prediction per epoch from a
+  30,000-sample average pool, our stage-2 trainer and scorer. The 128 Hz
+  weights do not transfer to 1 kHz, so there is no pretrained backbone and no
+  frozen head phase (as Exp 15a).
+seed: 42
+network:
+  depth: 12
+  complexity: 1.2923
+  scale: 1.4142
+  hidden_size: 40
+  kernel_size: 9
+  pool_samples: 30000
+overrides:
+  finetune:
+    freeze_epochs: 0

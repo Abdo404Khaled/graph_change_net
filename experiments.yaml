@@ -1,0 +1,34 @@
+common: {}
+
+experiments:
+  - name: exp4_gru_decoder
+  - name: exp5_signed_gcn
+    enabled: false
+  - name: exp6_segment_position
+    enabled: false
+  - name: exp6a_sample_position
+    enabled: false
+  - name: exp7_signed_attention
+  - name: exp8_segment_graph
+  - name: exp9a_continuous_segment_graph
+  - name: exp9b_continuous_graph_transformer
+  - name: exp10_stable_change_segment_graph
+  - name: exp11_lag_graph_transformer
+  - name: exp11a_lag_transformer
+  - name: exp11b_segment_position
+  - name: exp11c_signed_attention_layer1
+  - name: exp10_more_data
+  - name: exp12_window_graph
+  - name: exp13a_rolling_5s
+  - name: exp13b_rolling_10s
+  - name: final5_signed_gcn
+  - name: final11_lag_graph_transformer
+  - name: final12_window_graph
+  - name: exp14a_scored_epochs
+  - name: exp14b_epoch_context
+  - name: exp15_final
+  - name: exp15a_no_stage1
+  - name: exp15b_no_context
+  - name: exp15c_reconstruction_only
+  - name: exp15_rotation
+    enabled: false

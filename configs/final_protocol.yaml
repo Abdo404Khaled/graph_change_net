@@ -1,0 +1,76 @@
+description: >-
+  The final protocol, layered after a model's own chain (base: [<model>.yaml,
+  final_protocol.yaml]). Whole nights: every scored 30 s epoch of the hypnogram is one
+  window with its own label (23,407 scored epochs over 28 nights, instead of the 548 that
+  Exp 1-13's twelve one-minute blocks per night held). 30 segments of 1 s per epoch.
+  Training drops epochs above 500 uV; validation and test keep every scored epoch. Same 5
+  test subjects and 5 validation folds as Exp 7-13 (the seeded draw gives the same split),
+  each fold with its own seed. Stage 1 runs 4 epochs (120 s of EEG) per step, the most the
+  continuous decoder allows at 30 s; stage 2 runs 32. Class-balance beta 0.9999, because
+  0.999 saturates above about 1,000 epochs per stage and would make the weights almost
+  uniform on whole nights.
+data:
+  window_s: 30.0
+  n_segments: 30
+  block_s: 600.0
+  pad_s: 10.0
+  align_blocks: false
+  rolling: false
+  scored_epochs: true
+  artifact_uv: 500.0
+  scaler_stride: 100
+  context_epochs: 1
+  pretrain_unlabeled: false
+split:
+  n_test_subjects: 5
+  n_folds: 5
+  fold: 0
+  fold_seed: true
+loader:
+  batch_size: 4
+  num_workers: 12
+augment:
+  time_roll: 100
+  scale: 0.15
+  channel_drop: 0.15
+pretrain:
+  epochs: 30
+  lr: 1.0e-3
+  weight_decay: 1.0e-3
+  mask_ratio: 0.3
+  channel_mask_prob: 0.3
+  patience: 10
+  val_every: 1
+  delta_penalty: 1.0e-3
+  graph_penalty: 0.0
+  spectral_loss: false
+  stft_sizes: [256, 512, 1024]
+  future_steps: 0
+  future_temperature: 0.1
+  uncertainty_weighting: false
+  init_run: ""
+finetune:
+  batch_size: 32
+  epochs: 40
+  lr: 1.0e-3
+  weight_decay: 1.0e-3
+  warmup_epochs: 2
+  patience: 10
+  ema_decay: 0.999
+  freeze_epochs: 4
+  backbone_lr_scale: 0.1
+  label_smoothing: 0.05
+  balanced_sampling: false
+  class_balanced_loss: true
+  class_balance_beta: 0.9999
+  class_weight_min: 0.5
+  class_weight_max: 3.0
+  focal_gamma: 1.5
+  delta_penalty: 1.0e-3
+  graph_penalty: 0.0
+evaluation:
+  shuffle_trials: 10
+  reconstruction_batches: 100
+  top_k: 3
+  plot_segments: 6
+  plots: true

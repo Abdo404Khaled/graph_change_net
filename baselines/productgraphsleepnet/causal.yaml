@@ -1,0 +1,13 @@
+configuration: causal
+description: >-
+  Causal control: the native configuration (native.yaml) unchanged except that every
+  9-epoch window ends at the scored epoch instead of being centred on it, so the
+  4 later epochs the native model sees are replaced by 4 more earlier ones
+  (baselines/sleepgraph/causal_launcher.py for training, native_predict.py --causal for
+  prediction). Retrained from scratch; measures what the model loses without future epochs.
+causal: true
+model: productgraphsleepnet
+arguments: []
+quick_arguments: [--epochs, 1, --early-stopping-start-epoch, 1, --selection-smoothing-window, 1,
+                  --num-workers, 0]
+predict_batch: 128

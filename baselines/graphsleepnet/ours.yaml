@@ -1,0 +1,14 @@
+configuration: ours
+description: >-
+  GraphSleepNet's released backbone (sleep-graph-benchmark) under our configuration: our 83
+  electrodes at 1 kHz with our preprocessing and training-fitted scaler, upstream's 9-band
+  differential-entropy node features computed from them and z-scored on unaugmented
+  training runs, one learned electrode graph per window built from the labelled epoch,
+  upstream's 5-epoch window ending at the labelled epoch (our causal protocol), our stage-2
+  trainer from scratch (no frozen probe, as Exp 15a).
+seed: 0
+window: 5
+de_fit_batches: 2
+overrides:
+  finetune:
+    freeze_epochs: 0

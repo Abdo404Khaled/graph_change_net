@@ -1,0 +1,55 @@
+configuration: native
+description: >-
+  DeepSleepNet in its own configuration on fold 0: one bipolar FPZ-CZ channel resampled to
+  100 Hz, no filter, no normalisation, wake trimmed to 30 min around sleep in training nights,
+  upstream's two-step training (oversampled CNN pretraining, then stateful sequential
+  fine-tuning) and the last epoch's weights. Every scored epoch of the test nights is scored.
+seed: 0
+signal:
+  channel: [FPZ, CZ]
+  sampling_rate: 100.0
+  resample_up: 1
+  resample_down: 10
+  epoch_s: 30.0
+  wake_edge_epochs: 60
+model:
+  first_filters: 64
+  deep_filters: 128
+  small:
+    first_kernel_s: 0.5
+    first_stride_s: 0.0625
+    first_pool: 8
+    deep_kernel: 8
+    last_pool: 4
+  large:
+    first_kernel_s: 4.0
+    first_stride_s: 0.5
+    first_pool: 4
+    deep_kernel: 6
+    last_pool: 2
+  dropout: 0.5
+  batch_norm:
+    epsilon: 1.0e-5
+    momentum: 0.001
+    gamma_std: 0.002
+  hidden_size: 512
+  n_layers: 2
+  forget_bias: 1.0
+weight_decay:
+  small_first: 1.0e-3
+  large_first: 0.0
+pretrain:
+  epochs: 100
+  batch_size: 100
+  lr: 1.0e-4
+  betas: [0.9, 0.999]
+  eps: 1.0e-8
+finetune:
+  epochs: 200
+  batch_size: 10
+  seq_length: 25
+  cnn_lr: 1.0e-6
+  sequence_lr: 1.0e-4
+  betas: [0.9, 0.999]
+  eps: 1.0e-8
+  clip_norm: 10.0

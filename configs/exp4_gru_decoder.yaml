@@ -1,0 +1,8 @@
+description: >-
+  Continuous GRU decoder and GRU sequence model; vanilla GCN on softmax(L^S + Delta),
+  which erases the sign of the graph. The original notebook used 1 val / 1 test subject;
+  this config uses the Exp 5 split.
+model:
+  graph_conv:
+    name: vanilla
+    dropout: 0.2

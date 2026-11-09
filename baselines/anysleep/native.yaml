@@ -1,0 +1,28 @@
+name: native
+mode: native
+description: >-
+  The released AnySleep checkpoints (anysleep-run1..3), zero-shot, exactly as
+  upstream/examples/anphy/predict_anphy.py runs them on ANPHY: 79 EEG channels
+  (SO1, SO2, ZY1, ZY2 left out as in that script; the paper says 83) plus EOG1
+  and EOG2, no filter and no re-referencing, resample_poly to 128 Hz, each
+  channel clipped to 20 times its IQR and robust-scaled on its own night, the
+  whole night in one forward pass, one prediction per 30 s epoch. No training.
+checkpoints:
+  - upstream/models/anysleep-run1.pth
+  - upstream/models/anysleep-run2.pth
+  - upstream/models/anysleep-run3.pth
+network:
+  depth: 12
+  complexity: 1.2923
+  scale: 1.4142
+  hidden_size: 40
+  sleep_stage_frequency: 1
+preprocessing:
+  sampling_rate_hz: 128
+  clip_iqr_multiple: 20
+  epoch_seconds: 30
+channels: [Fp1, Fp2, F3, F4, C3, C4, P3, P4, O1, O2, F7, F8, T3, T4, T5, T6, FZ, CZ, PZ,
+           F9, F10, T9, T10, P9, P10, AF7, AF3, F11, F5, F1, FT11, FT9, FT7, FC5, FC3, FC1,
+           FCZ, C5, C1, TP11, TP9, TP7, CP3, CP1, P11, P5, P1, PO7, PO3, POZ, OZ, FPZ, AFZ,
+           AF4, AF8, F2, F6, F12, FC2, FC4, FC6, FT8, FT10, FT12, C6, C2, CPZ, CP2, CP4,
+           CP6, TP8, TP10, TP12, P2, P6, P12, PO4, PO8, EOG2, EOG1, CP5]

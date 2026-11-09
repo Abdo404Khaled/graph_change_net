@@ -1,0 +1,39 @@
+{
+ "source": "rotation of exp15_rotation",
+ "experiment": "default_rot5",
+ "commit": "8c30149c38c383b0d9e2376ebe5d360454086001",
+ "train": [
+  "EPCTL01",
+  "EPCTL04",
+  "EPCTL06",
+  "EPCTL07",
+  "EPCTL09",
+  "EPCTL11",
+  "EPCTL12",
+  "EPCTL13",
+  "EPCTL14",
+  "EPCTL17",
+  "EPCTL18",
+  "EPCTL19",
+  "EPCTL20",
+  "EPCTL21",
+  "EPCTL22",
+  "EPCTL23",
+  "EPCTL24",
+  "EPCTL25",
+  "EPCTL26",
+  "EPCTL29"
+ ],
+ "val": [
+  "EPCTL02",
+  "EPCTL10",
+  "EPCTL15",
+  "EPCTL27"
+ ],
+ "test": [
+  "EPCTL03",
+  "EPCTL05",
+  "EPCTL16",
+  "EPCTL28"
+ ]
+}

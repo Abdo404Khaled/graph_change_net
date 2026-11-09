@@ -1,0 +1,12 @@
+base: exp15_final.yaml
+description: >-
+  Exp 15 unchanged, evaluated by rotating cross-validation over all 28 nights. The five Exp 15
+  folds share one test set of five nights and differ only in validation nights and seed, so their
+  spread leaves out how much the result depends on the test nights, the larger source of spread
+  (per-night kappa 0.773-0.869). Here the nights are cut into 7 groups of 4; each run tests one
+  group, validates on the next and trains on the other 20, so every night is tested once. Only the
+  split changes. Run one group per job with --set split.test_group=<k>.
+split:
+  n_folds: 0
+  n_test_groups: 7
+  test_group: 0

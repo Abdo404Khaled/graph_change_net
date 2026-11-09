@@ -1,0 +1,20 @@
+configuration: ours
+description: >-
+  MSTGCN's released graph network (sleep-graph-benchmark) under our configuration: our 83
+  electrodes at 1 kHz with our preprocessing and training-fitted scaler; upstream's
+  two-branch FeatureNet with the first kernels and strides scaled by 10 for 1 kHz (500/60
+  and 4000/500, still 256 features per channel), trained jointly with the graph network
+  (our trainer has one stage); a learned functional graph per epoch and the benchmark's
+  distance kernel (sigma 0.35 head radii) on our 3-D montage positions as the static graph;
+  upstream's 5-epoch window ending at the labelled epoch; our stage-2 trainer from scratch
+  (no frozen probe), so no graph losses and no domain-adversarial head.
+seed: 0
+window: 5
+sigma: 0.35
+feature_net:
+  small: {kernel: 500, stride: 60, pool: 16}
+  large: {kernel: 4000, stride: 500, pool: 8}
+de_fit_batches: 0
+overrides:
+  finetune:
+    freeze_epochs: 0

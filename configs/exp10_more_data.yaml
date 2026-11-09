@@ -1,0 +1,7 @@
+base: exp10_stable_change_segment_graph.yaml
+description: >-
+  Exp 10 with 4x the EEG per night: 48 one-minute blocks per subject instead of 12
+  (48 of about 480 scored minutes). Only the data changes, so a gain shows that the amount of
+  training data, not the architecture, limits Exp 5-10, which all score kappa 0.59-0.61.
+data:
+  blocks_per_subject: 48

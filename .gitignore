@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+
+# Data, caches and run outputs are never committed.
+data/*
+cache_v0/
+runs/
+baselines/cache/
+baselines/results/
+
+# Third-party baseline code, weights and papers stay local; each baseline's README records
+# the upstream repository, commit and licence to re-create them.
+baselines/*/upstream/
+baselines/*/weights/
+baselines/*/*.pdf
+*.pt
+*.npz
+*.log
+
+# Working notebooks stay local.
+/*.ipynb
+!data/.gitkeep
+ablations/results/
+analysis/results/
+.claude/

@@ -1,0 +1,15 @@
+configuration: ours
+description: >-
+  ProductGraphSleepNet's released backbone (sleep-graph-benchmark) under our configuration:
+  our 83 electrodes at 1 kHz with our preprocessing and training-fitted scaler, upstream's
+  9-band differential-entropy node features computed from them and z-scored on unaugmented
+  training runs, upstream's learned spatial and temporal graphs over a 9-epoch window ending
+  at the labelled epoch (our causal protocol), our stage-2 trainer from scratch (no frozen
+  probe), so without upstream's graph-smoothness loss.
+seed: 0
+window: 9
+backbone: {gru_cell: 256, heads: 20, dropout: 0.6}
+de_fit_batches: 2
+overrides:
+  finetune:
+    freeze_epochs: 0

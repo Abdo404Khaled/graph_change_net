@@ -1,0 +1,18 @@
+base: exp9a_continuous_segment_graph.yaml
+description: >-
+  Exp 9a with a causal Transformer in place of the segment graph's message passing: the
+  continuous signed segment graph, through one signed attention, gives per-pair
+  importances that bias the attention logits (learned weight per head, starting at zero)
+  of a 4-block causal Transformer on the layer-1 segment features.
+model:
+  sequence:
+    name: continuous_graph_transformer
+    hidden: 128
+    layers: 4
+    heads: 4
+    ff_mult: 4
+    dropout: 0.1
+    edge_hidden: 64
+    graph_heads: 4
+    attention_dim: 8
+    negative_slope: 0.2

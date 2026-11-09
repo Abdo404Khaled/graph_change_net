@@ -1,0 +1,8 @@
+base: exp4_gru_decoder.yaml
+description: >-
+  Signed graph convolution (Derr, Ma & Tang 2018) keeps the sign of L^S + Delta.
+  3 val / 5 test subjects.
+model:
+  graph_conv:
+    name: signed
+    dropout: 0.2

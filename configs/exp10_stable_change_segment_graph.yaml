@@ -1,0 +1,17 @@
+base: exp9b_continuous_graph_transformer.yaml
+description: >-
+  Exp 9b with the segment graph built by layer 1's own algorithm: a stable graph from
+  learned segment-position embeddings plus the change, the cosine similarity of what the
+  stable graph cannot predict from the earlier segments. Edge signs come from the data.
+  Its signed attention importances bias the causal Transformer as in Exp 9b.
+model:
+  sequence:
+    name: stable_change_graph_transformer
+    hidden: 128
+    layers: 4
+    heads: 4
+    ff_mult: 4
+    dropout: 0.1
+    graph_heads: 4
+    attention_dim: 8
+    negative_slope: 0.2

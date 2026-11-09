@@ -1,0 +1,21 @@
+base: final12_window_graph.yaml
+description: >-
+  Final Exp 12 with what Exp 13 added that still applies to scored epochs: stage 1 also
+  has a spectral loss and a contrastive "predict the next second" loss next to the masked
+  reconstruction, weighted by learned uncertainties, and also uses the clean lights-on
+  epochs; the classifier pools all 30 segments of the epoch by attention instead of reading
+  the last one. Exp 13's rolling windows (per-second labels) and elapsed time (no effect in
+  13a or 13b) are dropped.
+data:
+  pretrain_unlabeled: true
+model:
+  readout:
+    name: attention_pool
+    tokens: 30
+    elapsed_time: false
+pretrain:
+  spectral_loss: true
+  stft_sizes: [256, 512, 1024]
+  future_steps: 1
+  future_temperature: 0.1
+  uncertainty_weighting: true

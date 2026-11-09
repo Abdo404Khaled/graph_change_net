@@ -1,0 +1,23 @@
+base: exp11_lag_graph_transformer.yaml
+description: >-
+  Exp 11 with the segment graph computed from the window alone: per-electrode cosine of the
+  standardised layer-1 features of two segments, averaged over electrodes, then centred and
+  scaled over each segment's earlier segments. No learned lag table in the graph (Exp 11's
+  table fixed the sign of 93-96% of the edges and its Delta was ignored). The lag bias stays
+  in the attention. The classifier head gets two pre-norm residual MLP blocks.
+model:
+  sequence:
+    name: window_graph_transformer
+    hidden: 128
+    layers: 4
+    heads: 4
+    ff_mult: 4
+    dropout: 0.1
+    graph_heads: 4
+    attention_dim: 8
+    negative_slope: 0.2
+  head:
+    name: residual_mlp
+    hidden: 256
+    blocks: 2
+    dropout: 0.35

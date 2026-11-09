@@ -1,0 +1,11 @@
+base: exp11_lag_graph_transformer.yaml
+description: >-
+  Control for Exp 11: signed graph attention (Exp 7) instead of the signed convolution in
+  layer 1. Compares SGCN and SGAT on the electrode graph under the same model and folds.
+model:
+  graph_conv:
+    name: signed_attention
+    dropout: 0.2
+    heads: 4
+    attention_dim: 8
+    negative_slope: 0.2

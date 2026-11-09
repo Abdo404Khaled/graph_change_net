@@ -1,0 +1,5 @@
+base: [exp11_lag_graph_transformer.yaml, final_protocol.yaml]
+description: >-
+  Exp 11 under the final protocol: Exp 5's electrode graph plus a segment graph that is
+  stable + change at the segment level too, G = S(t - s) + Delta with a learned value per
+  lag, feeding a signed graph branch in every causal Transformer block.

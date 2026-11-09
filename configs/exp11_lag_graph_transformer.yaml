@@ -1,0 +1,26 @@
+base: exp10_stable_change_segment_graph.yaml
+description: >-
+  Exp 10 with three fixes for a segment graph that did not learn. Layer 1 goes back to the
+  signed graph convolution (Exp 5) and no absolute segment position is added. The segment
+  graph is G = S(t - s) + Delta, with a stable part per lag starting at zero and Exp 10's change
+  on position-free tokens. It feeds a signed graph attention branch (SNEA) in every causal
+  block, next to self-attention with a learned lag bias, instead of a small logit bias.
+  Every fold starts from its own seed.
+split:
+  fold_seed: true
+model:
+  graph_conv:
+    name: signed
+    dropout: 0.2
+  position:
+    name: none
+  sequence:
+    name: lag_graph_transformer
+    hidden: 128
+    layers: 4
+    heads: 4
+    ff_mult: 4
+    dropout: 0.1
+    graph_heads: 4
+    attention_dim: 8
+    negative_slope: 0.2

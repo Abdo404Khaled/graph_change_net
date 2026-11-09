@@ -1,0 +1,79 @@
+configuration: native
+description: >-
+  Hypno-PC as published (Guendelman & Shriki, SLEEP 2026; code d3b0eec): 83 EEG + EOG +
+  leg/chin EMG + ECG features from the EDFs with the authors' filters, reference and Welch
+  spectra; per-night z-score, interpolation and clipping; pooled z-score and PCA (90 % of
+  variance) fitted on the training nights only; LinearSVC on the raw principal components,
+  trained on every scored epoch of the training nights.
+signals:
+  window_s: 30.0
+  block_epochs: 20
+  pad_s: 10.0
+  eeg:
+    highpass: 0.5
+    lowpass: 40.0
+  eog:
+    channels:
+      EOG_vertical_left: EOG1
+      EOG_horizontal_right: EOG2
+    differences:
+      EOG_r_l_diff: [EOG1, EOG2]
+    highpass: 0.3
+    lowpass: 15.0
+    band: [0.3, 2.0]
+  emg:
+    pairs:
+      RLEG_power: [RLEG+, RLEG-]
+      LLEG_power: [LLEG+, LLEG-]
+      CHEMG_power: [CHEMG1, CHEMG2]
+    highpass: 10.0
+    lowpass: 50.0
+    band: [10.0, 50.0]
+  ecg:
+    pair: [ECG1, ECG2]
+    highpass: 0.5
+    lowpass: 20.0
+    max_heart_rate: 220.0
+    names: [ECG_heart_rate, ECG_SDNN, ECG_rmssd]
+welch:
+  n_fft: 4000
+  band: [0.5, 40.0]
+bands:
+  low_delta: [0.5, 1.5]
+  high_delta: [1.0, 4.0]
+  theta: [4.0, 8.0]
+  alpha: [8.0, 12.0]
+  low_sigma: [10.0, 13.0]
+  high_sigma: [12.0, 16.0]
+  beta: [15.0, 25.0]
+  gamma: [25.0, 40.0]
+normalisation:
+  clip: 5.0
+pca:
+  variance: 0.90
+  random_state: 42
+classifier:
+  C: 1.0
+  penalty: l2
+  loss: squared_hinge
+  dual: auto
+  tol: 1.0e-4
+  max_iter: 1000
+  class_weight: balanced
+  random_state: 0
+primary_row: all_components
+rows:
+  all_components:
+    components: all
+    standardise_components: false
+    context_epochs: 1
+  five_components:
+    components: 5
+    standardise_components: false
+    context_epochs: 1
+  standardised_components:
+    components: all
+    standardise_components: true
+    context_epochs: 1
+jobs: 6
+quick_epochs: 120

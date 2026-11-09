@@ -1,0 +1,25 @@
+base: exp12_window_graph.yaml
+description: >-
+  Exp 12 with rolling windows: a window is the 5 s before a "now" second and its label is the
+  stage of that second, so windows may cross a stage change; training moves "now" by a random
+  0-4 s each epoch, testing has one window per second. The classifier pools the last second's
+  segments and gets the elapsed time since the recording started. Pretraining adds a spectral
+  (multi-resolution STFT) loss and a contrastive "predict the next second" loss to the masked
+  reconstruction, weighted by learned uncertainties, and also uses unlabelled windows.
+data:
+  rolling: true
+  train_stride_s: 5
+  val_stride_s: 5
+  test_stride_s: 1
+  pretrain_unlabeled: true
+model:
+  readout:
+    name: attention_pool
+    tokens: 10
+    elapsed_time: true
+pretrain:
+  spectral_loss: true
+  stft_sizes: [256, 512, 1024]
+  future_steps: 10
+  future_temperature: 0.1
+  uncertainty_weighting: true

@@ -1,0 +1,12 @@
+base: exp15_final.yaml
+description: >-
+  Exp 15 without stage 1: the network starts from its random initialisation and is trained
+  for sleep staging only. With no stage 1 there is nothing to probe, so the backbone is not
+  frozen at the start (freeze_epochs 0) and gets the whole stage-2 budget.
+  Measures what the three-task stage 1 adds to the final model; across Exp 5-14a the
+  reconstruction quality of stage 1 did not predict the test kappa, and Exp 14a's two best
+  folds were the two whose stage 1 had stopped at epoch 1-2.
+pretrain:
+  epochs: 0
+finetune:
+  freeze_epochs: 0

@@ -1,0 +1,8 @@
+base: ../../configs/exp15_final.yaml
+description: >-
+  Exp 15 without the causal history of the change: graph_learner.memory is false, so each
+  segment's Delta_t is computed from that segment alone instead of being carried forward.
+  Measures what the accumulated change adds (RQ2).
+model:
+  graph_learner:
+    memory: false

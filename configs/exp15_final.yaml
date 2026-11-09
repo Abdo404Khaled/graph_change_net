@@ -1,0 +1,31 @@
+base: exp14b_epoch_context.yaml
+description: >-
+  The final model: Exp 14b (final 12 backbone, attention pooling over the 30 segments, a GRU
+  over the epoch and the 19 before it) with its own stage 1 that cannot explode. Exp 14a's
+  stage 1 failed: with the spectral loss, the gradient through the continuous decoder (one
+  30,000-step GRU per electrode) reached norms of 1e15-1e27, and two folds skipped most of
+  their steps. Here each 1 s segment is decoded from its layer-normalised latent by an MLP,
+  with no recurrence and so no backpropagation through time; the latent already carries the
+  history (accumulated Delta_t, causal context). Every stage-1 loss is divided by its trivial
+  baseline and the three are summed with fixed weights instead of learned uncertainties; the
+  log-spectrum gets a floor relative to the signal; a run stops if an epoch skips more than 1%
+  of its steps; training and validation curves are scored the same way. Several changes at
+  once; the ablations exp15a (no stage 1), exp15b (no epoch context) and exp15c (reconstruction
+  as the only stage-1 task) separate what stage 1, the context and the two extra tasks add.
+model:
+  decoder:
+    name: mlp_segment
+    hidden: 256
+pretrain:
+  init_run: ""
+  spectral_loss: true
+  future_steps: 1
+  uncertainty_weighting: false
+  reconstruction_weight: 1.0
+  spectral_weight: 1.0
+  future_weight: 1.0
+  relative_losses: true
+  spectral_floor: 0.01
+  max_skip_share: 0.01
+evaluation:
+  curve_batches: 50

@@ -1,0 +1,11 @@
+base: ../../configs/exp15_final.yaml
+description: >-
+  Exp 15 with one electrode graph per 30 s window instead of one per 1 s segment (graph
+  learner epoch_change): L^S plus the change averaged over the window's 30 segments, given to
+  every segment, the granularity of the published graph sleep models. Every segment then sees
+  the later segments of its window, which breaks the causal order inside the window on
+  purpose; the causal order across epochs is unchanged. Measures what the 1 s granularity
+  adds.
+model:
+  graph_learner:
+    name: epoch_change

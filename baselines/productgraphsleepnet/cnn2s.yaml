@@ -1,0 +1,18 @@
+configuration: cnn2s
+description: >-
+  ProductGraphSleepNet (Einizade et al., Neural Networks 2023) with the shared waveform frontend of Juvina & Nicolae (MAKE 8:289, 2026), their
+  CNN-2S condition, through sleep-graph-benchmark on our fold: the same upstream ANPHY
+  preparation as the native run (19 EEG + 2 EOG + 2 EMG channels, 100 Hz), each channel's 30 s
+  waveform z-scored per recording and encoded by a four-block 1-D CNN trained first as an epoch
+  classifier and then frozen; the released graph backbone (9-epoch windows) is trained on
+  the frozen features with upstream's trainer and model selection. Their best ANPHY variant.
+  Every scored test epoch is then predicted from the selected checkpoint with upstream's
+  edge-padded windows over the saved frozen features.
+model: productgraphsleepnet
+condition: cnn_2s
+predict_kind: productgraphsleepnet_cnn2s
+arguments: []
+quick_arguments: [--epochs, 1, --feature-epochs, 1, --early-stopping-start-epoch, 1,
+                  --feature-early-stopping-start-epoch, 1, --selection-smoothing-window, 1,
+                  --num-workers, 0]
+predict_batch: 128

@@ -1,0 +1,12 @@
+base: ../../configs/exp15_final.yaml
+description: >-
+  Exp 15 trained on the full recorded band: the 0.5 Hz high-pass and notches at 60 Hz and its
+  harmonics up to 420 Hz remove drift and line noise, and there is no low-pass, so the model
+  sees 0.5-500 Hz instead of 0.5-45 Hz. The released ANPHY recordings carry content up to
+  about 450 Hz (line-noise harmonics up to 420 Hz are present), which the dataset's own
+  pipeline and ours discarded. Exp 15's weights already gain +0.008 kappa from this input at
+  test time without retraining; band power above 45 Hz alone decodes the stage at kappa 0.38,
+  mostly Wake and REM.
+data:
+  filter: highpass
+  notch_harmonics: 7

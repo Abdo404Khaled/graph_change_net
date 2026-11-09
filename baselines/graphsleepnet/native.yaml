@@ -1,0 +1,13 @@
+configuration: native
+description: >-
+  GraphSleepNet (Jia et al., IJCAI 2020) as released, through sleep-graph-benchmark's native
+  pipeline on our fold 0: upstream's ANPHY preparation (19 EEG + 2 EOG + 2 EMG channels,
+  0.3-100 Hz, 100 Hz), 9-band differential-entropy node features z-scored on the training
+  nights, one learned electrode graph per 5-epoch window from its centre epoch, upstream's
+  trainer and model selection. Every scored test epoch is then predicted from the selected
+  checkpoint with upstream's edge-padded windows.
+model: graphsleepnet
+arguments: []
+quick_arguments: [--epochs, 1, --early-stopping-start-epoch, 1, --selection-smoothing-window, 1,
+                  --num-workers, 0]
+predict_batch: 256

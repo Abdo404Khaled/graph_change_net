@@ -1,0 +1,4 @@
+distance_bins: 10
+pca_components: 50
+transition_window: 5
+seed: 0

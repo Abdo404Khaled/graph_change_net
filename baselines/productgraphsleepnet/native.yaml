@@ -1,0 +1,14 @@
+configuration: native
+description: >-
+  ProductGraphSleepNet (Einizade et al., Neural Networks 2023) as released, through
+  sleep-graph-benchmark's native pipeline on our fold 0: upstream's ANPHY preparation (19 EEG
+  + 2 EOG + 2 EMG channels, 0.3-100 Hz, 100 Hz), 9-band differential-entropy node features
+  z-scored on the training nights, a learned spatial graph and a learned temporal graph per
+  9-epoch window, upstream's trainer with the graph-smoothness loss and its model selection.
+  Every scored test epoch is then predicted from the selected checkpoint with upstream's
+  edge-padded windows.
+model: productgraphsleepnet
+arguments: []
+quick_arguments: [--epochs, 1, --early-stopping-start-epoch, 1, --selection-smoothing-window, 1,
+                  --num-workers, 0]
+predict_batch: 128

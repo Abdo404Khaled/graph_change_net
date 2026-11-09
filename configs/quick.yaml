@@ -1,0 +1,9 @@
+pretrain:
+  epochs: 1
+finetune:
+  epochs: 2
+  freeze_epochs: 1
+  warmup_epochs: 1
+  ema_decay: 0.9
+evaluation:
+  shuffle_trials: 1

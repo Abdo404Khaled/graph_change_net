@@ -1,0 +1,51 @@
+protocol: native
+description: >-
+  CBraMod's ISRUC sleep-staging recipe on ANPHY fold 0. Six EEG derivations referenced to the
+  contralateral mastoid stand-in (TP9/TP10 for ISRUC's A1/A2), resampled 1000 -> 200 Hz,
+  FIR 0.3-35 Hz then a 60 Hz notch, units of 100 uV, runs of 20 epochs (non-overlapping, plus
+  one right-aligned run per night), pretrained backbone fully fine-tuned with upstream's
+  optimiser, schedule, clipping and label smoothing; best validation kappa is tested.
+weights: baselines/cbramod/weights/pretrained_weights.pth
+seed: 3407
+data:
+  derivations:
+    - [F3, TP10]
+    - [C3, TP10]
+    - [O1, TP10]
+    - [F4, TP9]
+    - [C4, TP9]
+    - [O2, TP9]
+  sampling_hz: 200
+  highpass: 0.3
+  lowpass: 35.0
+  notch: 60.0
+  unit_uv: 100.0
+  epoch_s: 30
+  sequence_epochs: 20
+model:
+  backbone:
+    in_dim: 200
+    out_dim: 200
+    d_model: 200
+    dim_feedforward: 800
+    seq_len: 30
+    n_layer: 12
+    nhead: 8
+    dropout: 0.1
+  patch_samples: 200
+  head_hidden: 512
+  sequence_heads: 4
+  sequence_feedforward: 2048
+  sequence_layers: 1
+train:
+  epochs: 50
+  batch_size: 64
+  micro_batch_size: 32
+  eval_batch_size: 16
+  lr: 1.0e-4
+  head_lr: 5.0e-4
+  weight_decay: 5.0e-2
+  min_lr: 1.0e-6
+  clip_value: 1.0
+  label_smoothing: 0.1
+  num_workers: 8

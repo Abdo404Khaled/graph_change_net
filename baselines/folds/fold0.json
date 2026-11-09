@@ -1,0 +1,39 @@
+{
+ "source": "runs/exp15_final_fold0/metrics.json",
+ "experiment": "exp15_final_fold0",
+ "commit": "c17dfb5607bad590c09954852d4e413037a6412a",
+ "train": [
+  "EPCTL01",
+  "EPCTL02",
+  "EPCTL03",
+  "EPCTL04",
+  "EPCTL05",
+  "EPCTL07",
+  "EPCTL09",
+  "EPCTL10",
+  "EPCTL11",
+  "EPCTL12",
+  "EPCTL14",
+  "EPCTL15",
+  "EPCTL16",
+  "EPCTL17",
+  "EPCTL18",
+  "EPCTL23",
+  "EPCTL25",
+  "EPCTL27"
+ ],
+ "val": [
+  "EPCTL13",
+  "EPCTL20",
+  "EPCTL21",
+  "EPCTL22",
+  "EPCTL28"
+ ],
+ "test": [
+  "EPCTL06",
+  "EPCTL19",
+  "EPCTL24",
+  "EPCTL26",
+  "EPCTL29"
+ ]
+}

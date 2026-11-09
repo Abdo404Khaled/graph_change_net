@@ -1,0 +1,7 @@
+base: ../../configs/exp15_final.yaml
+description: >-
+  Exp 15 on the 19 standard 10-20 electrodes instead of all 83 montage electrodes (common
+  average over the 19, as a 19-channel recording would have). Tests whether the electrode
+  density, the premise of a high-density model, changes sleep staging.
+data:
+  channel_subset: [FP1, FP2, F3, F4, F7, F8, C3, C4, CZ, P3, P4, O1, O2, T3, T4, T5, T6, FZ, PZ]

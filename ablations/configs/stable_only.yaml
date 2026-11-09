@@ -1,0 +1,8 @@
+base: ../../configs/exp15_final.yaml
+description: >-
+  Exp 15 with the stable graph alone: every segment gets A_t = L^S and Delta_t = 0 (graph
+  learner stable_only). The segment graph is unchanged. Measures what the change term adds
+  (Q1).
+model:
+  graph_learner:
+    name: stable_only
