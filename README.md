@@ -22,6 +22,7 @@ trains the whole network for staging. The final model (`configs/exp15_final.yaml
 ## Setup
 
 ```bash
+git clone https://github.com/Abdo404Khaled/graph_change_net && cd graph_change_net
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt              # install torch for your CUDA version first
 python scripts/download_anphy.py             # 86 GB of zips, about 132 GB unpacked, into data/anphy/

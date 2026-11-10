@@ -17,6 +17,7 @@ ablations are changes to our own model.
 | `no_segment_graph` | `sequence: lag_transformer`, Exp 11a's control: the same blocks and lag bias without the segment graph | segment | Does the segment graph matter? | 1,827,279 |
 | `stable_only` | `graph_learner: stable_only`, `A_t = L^S` (`Δ_t = 0`) | electrode | Does the change term matter? | 2,009,422 |
 | `no_memory` | `graph_learner.memory: false`, each `Δ_t` from its own segment only | electrode | Does the causal history of `Δ` matter? | 2,025,422 |
+| `input_change` | `graph_learner: input_change`, `delta_t` from the projected input segment instead of its residual under `L^S` (energy weight fixed to one) | electrode | Does building the change from the residual matter? | 2,025,423 |
 | `distance_graph` | `graph_learner: distance_kernel`, the fixed thresholded Gaussian kernel of scalp distance of Tang et al. (ICLR 2022), nothing learned | electrode | A learned or a fixed electrode graph? | 2,006,766 |
 | `epoch_graph` | `graph_learner: epoch_change`, one graph per 30 s window (`L^S` + the change averaged over its segments) | electrode | Does the 1 s granularity matter? Breaks causality inside the window on purpose, like every per-epoch model. | 2,025,422 |
 | `no_electrode_graph` | `graph_learner: no_graph`, every edge zero; each electrode keeps its own path | electrode | Does the electrode graph matter at all? | 2,006,766 |

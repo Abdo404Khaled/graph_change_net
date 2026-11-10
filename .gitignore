@@ -30,3 +30,5 @@ baselines/*/*.pdf
 ablations/results/
 analysis/results/
 .claude/
+# Local paper exports.
+output/

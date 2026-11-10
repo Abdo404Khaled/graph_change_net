@@ -1,0 +1,10 @@
+base: ../../configs/exp15_final.yaml
+description: >-
+  Exp 15 with the change computed from the input segment instead of its residual: graph learner
+  input_change, delta_t is the cosine similarity of the projected segments X_t[c] (energy weight
+  fixed to one), not of the residuals X_t[c] - softmax(L^S) X_t. L^S, the accumulation, every
+  parameter and the recipe are unchanged. Measures what building the change from the residual adds.
+model:
+  graph_learner:
+    name: input_change
+    memory: true

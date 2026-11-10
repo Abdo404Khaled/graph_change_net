@@ -300,6 +300,46 @@ class ResidualChange(nn.Module):
         return stable + delta, delta, stable
 
 
+@register("graph_learner", "input_change")
+class InputChange(ResidualChange):
+    """Stable graph ``L^S`` plus a change computed from the segment itself, not from its residual.
+
+    The ablation of the residual in ``residual_change``: the per-segment change is the cosine
+    similarity of the projected input segments ``X_t[c]`` instead of the projected residuals
+    ``X_t[c] - softmax(L^S) X_t``, so it no longer depends on what ``L^S`` already explains. The
+    energy weight of ``residual_change`` (the share of an electrode's energy the stable graph
+    leaves unexplained) has no counterpart without a residual and is fixed to one. Parameters,
+    their names, the accumulation and ``A_t = L^S + Delta_t`` are those of ``residual_change``,
+    so the two differ only in what the change is computed from.
+
+    Parameters
+    ----------
+    dims : Dimensions
+        Shared sizes.
+    memory : bool
+        Carry the change forward, as in ``residual_change``.
+    """
+
+    def change(self, cells: torch.Tensor, stable: torch.Tensor) -> torch.Tensor:
+        """Signed similarity of the projected input segments of every electrode pair.
+
+        Parameters
+        ----------
+        cells : torch.Tensor
+            Node features ``[B, T, C, L]``.
+        stable : torch.Tensor
+            Stable graph scores ``[C, C]``; unused, kept for the interface of ``residual_change``.
+
+        Returns
+        -------
+        torch.Tensor
+            Score changes ``[B, T, C, C]`` in ``[-1, 1]``.
+        """
+        projected = F.normalize(self.project(cells), dim=-1)
+        scores = projected @ projected.mT
+        return 0.5 * (scores + scores.mT)
+
+
 @register("graph_learner", "stable_only")
 class StableOnly(nn.Module):
     """The stable graph ``L^S`` alone, with no change term (ablation ``stable_only``).

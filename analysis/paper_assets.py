@@ -8,7 +8,8 @@ Writes into the output folder:
 - ``tables/table_ablation.tex``: (A) the runs that built the final model and (B) the removals from it,
   five folds each (mean ± SD and folds below GraphChangeNet); (C) the mechanism ablations of the
   single split with staging (Holm marks from ``stats.json``) and stage-1 measures on the test nights
-  (``stage1_stats.json``, ``stage1_stats_t1.json``), and the nearest visible electrode;
+  (``stage1_stats.json``, ``stage1_stats_t1.json``, ``stage1_stats_input.json``), the final model after stage 2 with its stage-1
+  and refit decoders (``stage1_stats_stage2.json``), and the nearest visible electrode;
 - ``figures/fig_missing.pdf``: variance explained of a hidden electrode against the number of hidden
   neighbours on the test nights;
 - ``figures/fig_buildup.pdf``: five-fold macro-F1 of the runs in (A) and (B);
@@ -281,6 +282,31 @@ def fold_scores(prefix: Path, name: str) -> tuple[list, list, list, int]:
             [m["test"]["f1_N1"] for m in metrics], metrics[0]["parameters"])
 
 
+def ablation_test(name: str) -> tuple:
+    """Size and test scores of a fold-0 ablation run, from its ``metrics.json`` or else its log.
+
+    The log is the fallback for runs whose evaluation ended before ``metrics.json`` was written;
+    such runs have the parameter count of the final model.
+
+    Parameters
+    ----------
+    name : str
+        Ablation name.
+
+    Returns
+    -------
+    tuple
+        ``(metrics or None, parameters in millions as text, (kappa, macro-F1, N1 F1))``.
+    """
+    folder = ABL / f"{name}_fold0"
+    if (folder / "metrics.json").exists():
+        m = read(folder / "metrics.json")
+        return m, millions(m["parameters"]), (m["test"]["kappa"], m["test"]["macro_f1"], m["test"]["f1_N1"])
+    log = (REPO / f"logs/ablation_{name}_fold0.log").read_text(errors="replace")
+    found = re.findall(r"TEST: \{'kappa': ([0-9.]+), 'macro_f1': ([0-9.]+).*?'f1_N1': ([0-9.]+)", log)[-1]
+    return None, "2.03", tuple(float(v) for v in found)
+
+
 def ablation_table() -> list:
     """Table III: five-fold build-up and removals, single-split mechanisms with stage-1 measures.
 
@@ -348,14 +374,13 @@ def ablation_table() -> list:
         mark = "$^{*}$" if holm[key]["p_macro_f1_holm"] < 0.05 else ""
         lines.append(f"\\quad {label} & {millions(m['parameters'])} & {number(m['test']['macro_f1'])}{mark} & "
                      f"{number(m['test']['kappa'])} & {number(m['test']['f1_N1'])} & {stage1_cells(stage1['variants'][key])} \\\\")
-    unsigned = ABL / "unsigned_graph_fold0"
-    if (unsigned / "metrics.json").exists():
-        m = read(unsigned / "metrics.json")
-        size, test = millions(m["parameters"]), (m["test"]["kappa"], m["test"]["macro_f1"], m["test"]["f1_N1"])
-    else:
-        log = (REPO / "logs/ablation_unsigned_graph_fold0.log").read_text(errors="replace")
-        size = "2.03"
-        test = [float(v) for v in re.findall(r"TEST: \{'kappa': ([0-9.]+), 'macro_f1': ([0-9.]+).*?'f1_N1': ([0-9.]+)", log)[-1]]
+        if key == "no_memory":
+            m, size, test = ablation_test("input_change")
+            mark = "$^{*}$" if read(NOTES / "stats.json")["additional"]["input_change"]["p_macro_f1_holm"] < 0.05 else ""
+            lines.append(f"\\quad change from the segment, not the residual & {size} & {number(test[1])}{mark} & "
+                         f"{number(test[0])} & {number(test[2])} & "
+                         f"{stage1_cells(read(NOTES / 'stage1_stats_input.json')['variants']['input_change'])} \\\\")
+    _, size, test = ablation_test("unsigned_graph")
     lines.append(f"\\quad trained without edge signs & {size} & {number(test[1])} & {number(test[0])} & "
                  f"{number(test[2])} & {stage1_cells(t1['variants']['unsigned_graph'])} \\\\")
     near = t1["nearest_visible"]
@@ -364,6 +389,12 @@ def ablation_table() -> list:
     lines += ["\\bottomrule", "\\end{tabular}"]
     lines = shade(lines, {2: "max", 3: "max", 4: "max", 5: "min", 6: "min", 7: "max", 8: "max", 9: "max"},
                   separator="\\midrule")
+    after = read(NOTES / "stage1_stats_stage2.json")["variants"]
+    refit = [f"\\quad GraphChangeNet after stage 2, {label} & --- & --- & --- & --- & {stage1_cells(after[key])} \\\\"
+             for label, key in (("stage-1 decoder", "Exp 15 after stage 2"),
+                                ("decoder refit", "Exp 15 after stage 2, decoder refit"))]
+    position = next(i for i, line in enumerate(lines) if "nearest visible electrode" in line)
+    lines[position:position] = refit
     (TABLES / "table_ablation.tex").write_text("\n".join(lines) + "\n")
     return figure_rows
 

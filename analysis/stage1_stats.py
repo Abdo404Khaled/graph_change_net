@@ -6,7 +6,10 @@ reconstruction is scored with) are evaluated on every test epoch under four hidi
 same masks for every run (argv[3:] restricts the runs to those names, Exp 15 always included; a run
 without ``metrics.json``, such as the T1 run whose job ended before writing it, is accepted when its
 configured split equals that of Exp 15); the nearest visible electrode is scored on the same
-clustered masks as a model-free baseline:
+clustered masks as a model-free baseline. ``Exp 15 after stage 2`` evaluates the final weights
+(``classify_best.pt``: the fine-tuned backbone with the stage-1 decoder, which stage 2 does not
+train) on the same masks, to test whether reconstruction survives the fine-tuning, and ``Exp 15 after
+stage 2, decoder refit`` the same model with only its decoder retrained by ``decoder_refit.py``:
 
 - ``stage1``: the training mask of Exp 15 (random cells plus whole electrodes, ``train.sample_mask``,
   seeded per batch); relative reconstruction loss (smooth L1 against predicting zeros) and relative
@@ -49,7 +52,12 @@ RUNS = {"Exp 15": REPO / "runs/exp15_final_fold0",
         "cluster_mask": RESULTS / "cluster_mask_fold0",
         "15b no context": REPO / "runs/exp15b_no_context_fold0",
         "15c reconstruction only": REPO / "runs/exp15c_reconstruction_only_fold0",
-        "unsigned_graph": RESULTS / "unsigned_graph_fold0"}
+        "unsigned_graph": RESULTS / "unsigned_graph_fold0",
+        "input_change": RESULTS / "input_change_fold0",
+        "Exp 15 after stage 2": REPO / "runs/exp15_final_fold0",
+        "Exp 15 after stage 2, decoder refit": REPO / "runs/exp15_final_fold0"}
+WEIGHTS = {"Exp 15 after stage 2": "classify_best.pt",
+           "Exp 15 after stage 2, decoder refit": REPO / "analysis/results/decoder_refit_fold0.pt"}
 KS = (0, 5, 10)
 CENTRES = 4
 
@@ -202,7 +210,7 @@ def main():
             raise ValueError(f"{name} has another split than Exp 15")
         cfg = load_run_config(run_dir, {})
         model = GraphChangeNet(cfg, len(channels), coords).to(base.device)
-        load_weights(model, run_dir / "pretrain_best.pt", base.device)
+        load_weights(model, run_dir / WEIGHTS.get(name, "pretrain_best.pt"), base.device)
         stats[name] = epoch_statistics(model.eval(), base, batches, order, name == "Exp 15")
         print(name, {k: round(float(v), 4) for k, v in
                      metrics(stats[name], np.arange(len(nights))).items()}, flush=True)

@@ -50,7 +50,7 @@ groups:
       - command: python -m ablations.run {name} --fold 0
         for:
           name: [no_electrode_graph, epoch_graph, stable_only, no_memory, distance_graph, unsigned_graph,
-                 no_segment_graph, no_graph, no_electrode_graph_no_stage1, raw, electrodes_19]
+                 input_change, no_segment_graph, no_graph, no_electrode_graph_no_stage1, raw, electrodes_19]
         done: ablations/results/{name}_fold0/metrics.json
       - command: python -m ablations.run {name} --fold {fold}
         for:
@@ -108,8 +108,9 @@ groups:
         done: analysis/results/e2_all.json
       - command: python analysis/pred_rest.py analysis/results
         done: analysis/results/pred_rest.json
-      - command: python analysis/t1_predictions.py analysis/results/predictions
-        done: analysis/results/predictions/unsigned_graph.npz
+      - command: python analysis/t1_predictions.py analysis/results/predictions {name}
+        for: {name: [unsigned_graph, input_change]}
+        done: analysis/results/predictions/{name}.npz
       - command: python analysis/stats.py analysis/results analysis/results
         done: analysis/results/stats.json
       - command: python analysis/rotation_outputs.py analysis/results/rotation_predictions
@@ -122,6 +123,14 @@ groups:
         done: analysis/results/stage1_stats.json
       - command: python analysis/stage1_stats.py analysis/results/stage1_stats_t1.json 2000 unsigned_graph
         done: analysis/results/stage1_stats_t1.json
+      - command: python analysis/stage1_stats.py analysis/results/stage1_stats_input.json 2000 input_change
+        done: analysis/results/stage1_stats_input.json
+      - command: python analysis/decoder_refit.py analysis/results/decoder_refit_fold0.pt 5
+        done: analysis/results/decoder_refit_fold0.json
+      - command: >-
+          python analysis/stage1_stats.py analysis/results/stage1_stats_stage2.json 2000 "Exp 15 after stage 2"
+          "Exp 15 after stage 2, decoder refit"
+        done: analysis/results/stage1_stats_stage2.json
       - command: python analysis/segment_stage.py analysis/results/scaler_fold0.npz analysis/results/segment_graphs.npz
         done: analysis/results/segment_graphs.npz
       - command: python analysis/stage_graphs.py analysis/results/stage_graphs

@@ -5,7 +5,9 @@ One bootstrap draw resamples the 5 test nights with replacement and then the epo
 night with replacement; the same draw scores Exp 15 and the comparator, so the difference is paired.
 Native AnySleep and U-Sleep, and causal AnySleep, are scored as the mean over their 3 released runs, as
 reported. The baselines family also holds the causal and CNN-2S configurations of the single split, and the
-components family the run trained without edge signs (``unsigned_graph``, from ``t1_predictions.py``).
+components family the run trained without edge signs (``unsigned_graph``, from ``t1_predictions.py``). The
+change computed from the input instead of the residual (``input_change``), added after the other
+families were fixed, is its own family, so it leaves their Holm correction unchanged.
 p is two-sided (2 x the smaller tail of the bootstrap difference). Also writes per-night kappa.
 argv: folder with e2_all predictions, output folder.
 """
@@ -45,6 +47,7 @@ families = {
                    ["15a no stage 1", "15b no context", "15c reconstruction only", "distance_graph", "stable_only",
                     "no_memory", "no_segment_graph", "epoch_graph", "no_electrode_graph", "no_graph", "unsigned_graph"]},
     "settings": {n: [PRED / f"{n}.npz"] for n in ["cluster_mask", "wideband", "wideband_cluster", "raw", "electrodes_19"]},
+    "additional": {n: [PRED / f"{n}.npz"] for n in ["input_change"]},
 }
 extra = {"no_electrode_graph_no_stage1 vs 15a": ([PRED / "no_electrode_graph_no_stage1.npz"], [PRED / "15a_no_stage_1.npz"])}
 
